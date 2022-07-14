@@ -76,8 +76,9 @@ func (server *Server) RawScan(_ context.Context, req *kvrpcpb.RawScanRequest) (*
 	if err != nil {
 		return &kvrpcpb.RawScanResponse{}, err
 	}
-	//defer sreader.Close()
+	defer sreader.Close()
 	cfit := sreader.IterCF(req.Cf)
+	defer cfit.Close()
 	cfit.Seek(req.StartKey)
 	var kvs []* kvrpcpb.KvPair
 	limit := req.Limit
